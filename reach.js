@@ -102,16 +102,54 @@ reach.prototype.arguments_;
  */
 reach.prototype.arguments = function(opt_set) {
   if (arguments.length) {
-    // this overwrites the object entirely instead of overwriting properties
-    // if you want to be able to chain-add argument objects:
-    // this.arguments_ = this.arguments_ || {};
-    this.arguments_ = {};
+    // this does not overwrite wholesale
+    // rather, it adds to existing arguments
+    this.arguments_ = this.arguments_ || {};
     for (var i in opt_set) {
       this.arguments_[i] = opt_set[i];
     }
     return this;
   }
-  return this.arguments_ ? $.clone(this.arguments_) : {};
+  // todo: dereference this for safety
+  return this.arguments_ || {};
+};
+
+
+/**
+ * JSON-ify an item/argument
+ * If you have your own JSON library (vs polyfill),
+ * add it in this function
+ * @param {mixed} item
+ * @return {?string}
+ */
+reach.stringify = function(item) {
+  if (window.JSON) {
+    return window.JSON.stringify(item);
+  }
+
+  // this is where you'd add your library
+  // if you have jQuery JSON, for example:
+  /*if (window.$ && window.$.toJSON) {
+    return window.$.toJSON(item);
+  }*/
+
+  return null;
+};
+
+
+reach.stringify_polyfill_ = function(item) {
+  // todo
+};
+
+
+/**
+ * Prototype version
+ * Just calls the static method
+ * @param {mixed} item
+ * @return {?string}
+ */
+reach.prototype.stringify = function(item) {
+  return reach.stringify(item);
 };
 
 
@@ -180,8 +218,9 @@ reach.prototype.send = function() {
 
   var arguments = this.arguments();
   if (this.callback()) {
-    arguments[this.parameter()] =
-      'reach.callbacks[' + this.increment() + ']';
+    arguments[this.parameter()] = (
+      'reach.callbacks[' + this.increment() + ']'
+    );
   }
 
   var serial = [];
@@ -208,10 +247,14 @@ reach.prototype.send = function() {
 
   // adding these in to make debugging easier in the DOM
   // "Where did this random <script> come from?"
-  // is not a question you want to leave unanswered
-  script['dataset'] && script['dataset']['requestSource'] = 'reach';
-  script['dataset'] && script['dataset']['increment'] = this.increment();
-  script['dataset'] && script['dataset']['timestamp'] = Math.floor(Date.now() / 1000);
+  // this is not a question you want to leave unanswered
+  if (script['dataset']) {
+    script['dataset']['requestSource'] = 'reach';
+    script['dataset']['increment'] = this.increment();
+    script['dataset']['timestamp'] = (
+      Math.floor(Date.now() / 1000)
+    );
+  }
 
   // moment of truth!
   head.appendChild(script);

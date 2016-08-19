@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+  <title>reach.js test</title>
+  <link rel="stylesheet" type="text/css" href="test.css" />
+  <script type="text/javascript" src="../reach.js"></script>
+  <script type="text/javascript" src="jquery-3.1.0.min.js"></script>
+  <script type="text/javascript" src="test.js"></script>
+</head>
+<body>
+<h1>reach.js</h1>
+
+<p>Fill in the values you wish and click one of the buttons to call a test script. This will send a JSONP request (minus control JS script) to the script.</p>
+
+<!-- thus, <form>less inputs -->
+<div id="inputs">
+  <label for="apple">Apple</label>
+  <input type="number" id="apple"></input>
+  <label for="banana">Banana</label>
+  <input type="number" id="banana"></input>
+  <label for="carrot">Carrot</label>
+  <input type="number" id="carrot"></input>
+  <label for="durian">Durian</label>
+  <input type="number" id="durian"></input>
+  <label for="eggplant">Eggplant</label>
+  <input type="number" id="eggplant"></input>
+</div>
+
+<!-- add one button per tester -->
+<div id="buttons">
+  <button id="control">Control (JS)</button>
+  <button id="php">PHP</button>
+</div>
+
+<!-- gonna fill this in with js -->
+<div id="results">
+  No results yet!
+</div>
+
+</body>
+</html>

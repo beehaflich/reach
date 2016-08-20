@@ -26,7 +26,23 @@ You must, by the nature of cross-domain requests, trust the site you are sending
 
 The `reach` class is a wrapper to automatically construct the <script> element and attach it to the document with a minimum of fuss. It easily handles multiple requests, automatic callback aliasing, and encoding the component arguments.
 
-```todo example```
+See the test HTML/JS files in the `test` directory for examples.
+
+### What prerequisites do I need? What conflicts might this have?
+
+Nothing. This is a very simple library and has no external dependencies.
+
+In order to use the JSON stringification, you will either need to guarantee the client browser has access to the JSON object (polyfills are ok), or edit my code slightly to include whatever library or code you wish to use. Most sites are OK with this browser requirement; JSON has been supported for awhile.
+
+I use one global object - `reach` - so it should not conflict with any javascript that does not alter this global variable. If anyone ever chooses to use this instead of it being a personal repository for my code snippets, I will add a non-conflict mode.
+
+My test runner uses jQuery.
+
+### I can't run the tests?
+
+Make sure you are running a webserver. You can do this on your local machine through tools like XAMPP or WAMPServer if you do not have access to a dedicated webserver.
+
+
 
 
 

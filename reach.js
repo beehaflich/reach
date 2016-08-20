@@ -1,13 +1,30 @@
+/**
+ * @preserve reach - JSONP made simple
+ * @author beehaflich
+ * @license MIT
+ */
 
 
 
 /**
  * A component used for recieving data via JSONP
+ * @param {object} opt_init
  * @return {void}
  * @constructor
  */
-var reach = function() {
+var reach = function(opt_init) {
   this.increment_ = reach.increment_++;
+
+  // opt_init just lets you see these via the constructor
+  // you can also chain if you prefer that style
+  if (opt_init) {
+    var inits = ['callback', 'url', 'parameter', 'arguments'];
+    var i;
+    var len = inits.length;
+    for (i = 0; i < len; i++) {
+      opt_init[inits[i]] && this[inits[i]](opt_init[inits[i]]);
+    }
+  }
 };
 
 
@@ -192,7 +209,7 @@ reach.prototype.format = function(argument) {
   // alter this part if your script generating server json-decodes everything
   if (type === '[object String]') {
     // return this.stringify(argument);
-    return type;
+    return argument;
   }
 
   // numbers are just passed back
@@ -254,20 +271,17 @@ reach.prototype.send = function() {
   }
 
   var jsonp_arguments = this.arguments();
-  for (var arg in jsonp_arguments) {
-    jsonp_arguments[arg] = this.format(jsonp_arguments[arg]);
-  }
-  if (this.callback()) {
-    jsonp_arguments[this.parameter()] = (
-      'reach.callbacks[' + this.increment() + ']'
-    );
-  }
-
   var serial = [];
   for (var arg in jsonp_arguments) {
     serial.push(
       encodeURIComponent(arg) + '=' +
-      encodeURIComponent(jsonp_arguments[arg])
+      encodeURIComponent(this.format(jsonp_arguments[arg]))
+    );
+  }
+  if (this.callback()) {
+    serial.push(
+      encodeURIComponent(this.parameter()) + '=' +
+      encodeURIComponent('reach.callbacks[' + this.increment() + ']')
     );
   }
 

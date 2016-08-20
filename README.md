@@ -38,8 +38,6 @@ This also sends a GET request to the website, which you might prefer not to use.
 
 The `reach` class is a wrapper to automatically construct the `<script>` element and attach it to the document with a minimum of fuss. It easily handles multiple requests, automatic callback aliasing, and encoding the component arguments.
 
-See the test HTML/JS files in the `test` directory for examples.
-
 ### What prerequisites do I need? What conflicts might this have?
 
 There are no JS library prerequisites. I've written it vanilla for compatibility and simplicity.
@@ -59,6 +57,64 @@ Note: For now I just have a simple PHP test script; I may later include differen
 ### How do I include this in my website?
 
 You only need one file. Choose between `reach.js` and `reach-min.js`, depending on how much fiddling you intend to do. If you want to plug-and-play and keep your site speedy, choose the minified version. If you are going to play around with the code or need to debug, go with the non-minified version.
+
+### Okay, now how do I use it?
+
+Construct a new `reach` object and set your values.
+
+```javascript
+
+  // method 1 - create a new reach object and chain calls
+  var foo = new reach().url('https://example.com/jsonp.php').arguments({
+    'foo': 'bar',
+    'numeric': 2,
+    'complex': [{'a': 1}, {'a': 2, 'b': 1}, 7]
+  }).callback(function(response) {
+    console.log(response);
+  }).send();
+
+  // method 2 - send an object into the constructor
+  var bar = new reach({
+    'url': 'https://example.com/jsonp.php',
+    'arguments': {
+      'foo': 'bar',
+      'numeric': 2,
+      'complex': [{'a': 1}, {'a': 2, 'b': 1}, 7],
+      'callback': function(response) {
+        console.log(response);
+      }
+    }
+  }).send();
+
+  // you don't need to send immediately after construction
+  // perhaps you'd like to edit the object in the meantime
+
+  var baz = new reach({...});
+  // ...
+  baz.arguments({'foo': 'barbar'});
+  // ...
+  baz.arguments({'weird_setting': 7});
+  // ...
+  baz.send();
+
+  // what if our server is nonstandard and uses "fxn" instead of "callback"?
+  // got you covered, fam
+  var goo = new reach({...});
+  // this part renames the GET parameter
+  goo.parameter('fxn');
+  // still use the reach.callback function
+  goo.callback(function(response) {
+    console.log(response);
+  });
+
+  // so far I've been using anonymous functions, but you can name them if you want
+  var car = new reach({...});
+  var car_callback = function(response) {
+    console.log(response);
+  };
+  car.callback(car_callback);
+
+```
 
 ### Can I make a request?
 

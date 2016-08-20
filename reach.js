@@ -137,11 +137,6 @@ reach.stringify = function(item) {
 };
 
 
-reach.stringify_polyfill_ = function(item) {
-  // todo
-};
-
-
 /**
  * Prototype version
  * Just calls the static method
@@ -181,6 +176,48 @@ reach.prototype.parameter = function(opt_set) {
 
 
 /**
+ * Makes an argument become GET-able
+ * Will leave strings and numbers alone
+ * Functions are invalid JSON and will throw an exception
+ * NaN/Infinity are invalid JSON and will throw an exception
+ * Other types are JSON-d, even null/booleans
+ * @param {mixed} argument
+ * @return {string}
+ */
+reach.prototype.format = function(argument) {
+  // most compatible way to type-detect, afaik
+  var type = Object.prototype.toString.call(argument);
+
+  // strings are just passed back
+  // alter this part if your script generating server json-decodes everything
+  if (type === '[object String]') {
+    // return this.stringify(argument);
+    return type;
+  }
+
+  // numbers are just passed back
+  // alter this part if your script generating server json-decodes everything
+  if (type === '[object Number]') {
+    if (Number.isNaN(argument)) {
+      throw 'NaN is invalid JSON';
+    }
+    if (!Number.isFinite(argument)) {
+      throw 'Non-finite numbers are invalid JSON';
+    }
+    // return this.stringify(argument);
+    return argument;
+  }
+
+  if (type === '[object Function]') {
+    throw 'Function is invalid JSON';
+  }
+
+  // reach stringify by default just uses JSON stringify
+  return this.stringify(argument);
+};
+
+
+/**
  * Simple way to keep track of if a request was sent
  * The only thing I use it for is throwing errors if you attempt to double-send
  * If you're reading this, you probably have another use for it;
@@ -216,18 +253,21 @@ reach.prototype.send = function() {
     throw 'URL is required to send a JSONP request';
   }
 
-  var arguments = this.arguments();
+  var jsonp_arguments = this.arguments();
+  for (var arg in jsonp_arguments) {
+    jsonp_arguments[arg] = this.format(jsonp_arguments[arg]);
+  }
   if (this.callback()) {
-    arguments[this.parameter()] = (
+    jsonp_arguments[this.parameter()] = (
       'reach.callbacks[' + this.increment() + ']'
     );
   }
 
   var serial = [];
-  for (var arg in arguments) {
+  for (var arg in jsonp_arguments) {
     serial.push(
       encodeURIComponent(arg) + '=' +
-      encodeURIComponent(arguments[arg])
+      encodeURIComponent(jsonp_arguments[arg])
     );
   }
 

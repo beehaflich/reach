@@ -6,7 +6,7 @@ JSONP made simple.
 
 ### What is JSONP? Is it JSON?
 
-JSONP stands for "JSON with Padding", and is a hack to get around cross-origin restrictions. Basically, you dynamically load a script from a completely separate website. You send variables using GET, so all variables are "stringified" via JSON.
+JSONP stands for "JSON with Padding", and is a hack to get around cross-origin restrictions. Basically, you dynamically load a script from a completely separate website. You send variables using GET, so all complex variables are "stringified" via JSON.
 
 ### What are cross-origin restrictions? Why would I want to avoid them?
 
@@ -30,7 +30,7 @@ See the test HTML/JS files in the `test` directory for examples.
 
 ### What prerequisites do I need? What conflicts might this have?
 
-Nothing. This is a very simple library and has no external dependencies.
+There are no JS library prerequisites. I've written it vanilla for compatibility and simplicity.
 
 In order to use the JSON stringification, you will either need to guarantee the client browser has access to the JSON object (polyfills are ok), or edit my code slightly to include whatever library or code you wish to use. Most sites are OK with this browser requirement; JSON has been supported for awhile.
 
@@ -38,7 +38,7 @@ I use one global object - `reach` - so it should not conflict with any javascrip
 
 My test runner uses jQuery.
 
-### I can't run the tests?
+### I can't run the non-control tests?
 
 Make sure you are running a webserver. You can do this on your local machine through tools like XAMPP or WAMPServer if you do not have access to a dedicated webserver.
 

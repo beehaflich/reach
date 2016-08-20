@@ -12,7 +12,7 @@ JSONP stands for "JSON with Padding", and is a hack to get around cross-origin r
 
 A client browser cannot send XMLHttpRequests to a server on a different origin (usually domain). This is a safety feature at heart, and prevents scripts from different websites from sending data back-and-forth easily from the client.
 
-What you *can* do is load an entire script voluntarily from another site in a <script> tag (similar to direct-linking an image or loading a font directly from a hosting service's website). The server takes your GET parameters tacked onto the URL, uses them to load whatever data it needs from its servers, dynamically creates a javascript file (that calls your callback at the end), and echoes it back to the browser.
+What you *can* do is load an entire script voluntarily from another site in a `<script>` tag (similar to direct-linking an image or loading a font directly from a hosting service's website). The server takes your GET parameters tacked onto the URL, uses them to load whatever data it needs from its servers, dynamically creates a javascript file (that calls your callback at the end), and echoes it back to the browser.
 
 ### Why can't the servers just talk to each other?
 
@@ -24,7 +24,7 @@ You must, by the nature of cross-domain requests, trust the site you are sending
 
 ### How does this code help?
 
-The `reach` class is a wrapper to automatically construct the <script> element and attach it to the document with a minimum of fuss. It easily handles multiple requests, automatic callback aliasing, and encoding the component arguments.
+The `reach` class is a wrapper to automatically construct the `<script>` element and attach it to the document with a minimum of fuss. It easily handles multiple requests, automatic callback aliasing, and encoding the component arguments.
 
 See the test HTML/JS files in the `test` directory for examples.
 
